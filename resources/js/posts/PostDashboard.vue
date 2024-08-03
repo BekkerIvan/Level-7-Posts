@@ -1,26 +1,23 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import {getAPIPath} from "@/assets.js";
 
-let test = "Basdasd"
 const loading = ref(true);
 let posts = [];
-const error = ref(null);
 
 (async () => {
     loading.value = true;
-    const data = await fetch(getAPIPath(true)+"/posts").then((response) => {
+    await fetch(getAPIPath(true)+"/posts").then((response) => {
         if (response.ok) {
+            loading.value = false;
             return response.json();
         }
         throw new Error('Something went wrong');
     })
     .then((data) => {
-        loading.value = false;
         posts = data;
     })
     .catch((error) => {
-        loading.value = true;
         console.log(error)
     });
 })()

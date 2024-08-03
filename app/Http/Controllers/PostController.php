@@ -64,9 +64,10 @@ class PostController extends Controller
         //
     }
 
-    public function getDashboardPosts(): \Illuminate\Support\Collection {
+    public function getDashboardPosts(Request $request): \Illuminate\Support\Collection {
         return DB::table('posts')
             ->join('users', 'posts.user', '=', 'users.id')
+            ->whereNull("parent")
             ->select('posts.*', 'users.first_name', 'users.last_name')
             ->orderBy("posts.created_at", "DESC")
             ->get();
