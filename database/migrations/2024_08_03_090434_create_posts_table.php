@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->text("post");
             $table->timestamps();
+
+            $table->foreignId('user')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('parent')->nullable()->constrained('posts')->cascadeOnDelete();
         });
     }
 

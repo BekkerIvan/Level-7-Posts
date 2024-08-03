@@ -1,20 +1,19 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+import PostDashboard from "@/posts/PostDashboard.vue";
 </script>
 
 <template>
     <Head title="Dashboard" />
 
     <AuthenticatedLayout>
-
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">You're logged in!</div>
-                </div>
-            </div>
-        </div>
+        <v-container>
+            <v-row no-gutters>
+                <v-col cols="12" sm="8" offset-sm="2" md="6" offset-md="3">
+                    <PostDashboard></PostDashboard>
+                </v-col>
+            </v-row>
+        </v-container>
     </AuthenticatedLayout>
 </template>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class PostController extends Controller
 {
@@ -60,5 +62,13 @@ class PostController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function getDashboardPosts(): \Illuminate\Support\Collection {
+        return DB::table('posts')
+            ->join('users', 'posts.user', '=', 'users.id')
+            ->select('posts.*', 'users.first_name', 'users.last_name')
+            ->orderBy("posts.created_at", "DESC")
+            ->get();
     }
 }
