@@ -17,6 +17,8 @@ use App\Http\Controllers\PostController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/dashboard/posts/{user_id}', [PostController::class, 'getDashboardPosts']);
-Route::post('/dashboard/posts/{user_id}', [PostController::class, 'createPost']);
-Route::post('/dashboard/posts/{post_id}/{user_id}', [PostController::class, 'createComment']);
+Route::get('/dashboard/posts/', [PostController::class, 'getPosts']);
+Route::get('/dashboard/comments/', [PostController::class, 'getComments']);
+Route::get('/dashboard/post/comments/{post_id}', [PostController::class, 'getPostComments']);
+Route::post('/dashboard/posts/', [PostController::class, 'createPost']);
+Route::post('/dashboard/comments/', [PostController::class, 'createComment']);
