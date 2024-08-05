@@ -9,6 +9,9 @@ const text = ref("");
 const sending = ref(false);
 
 async function send() {
+    if (text.value.length < 1) {
+        return;
+    }
     const form = new FormData();
     form.append("post", text.value);
     form.append("user", usePage().props.auth.user.id);
@@ -34,10 +37,14 @@ async function send() {
         auto-grow
         rows="3"
         no-resize
+        counter
         class="px-2 w-full"
         label="What would you like to say..."
         :disabled="sending"
         :loading="sending"
+        :rules="[
+            () => !!text || 'This field is required'
+        ]"
     ></v-textarea>
 </template>
 
