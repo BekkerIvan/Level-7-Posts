@@ -3,6 +3,7 @@ import { ref, reactive, onMounted } from 'vue';
 import { getAPIPath } from "@/assets.js";
 import { usePage } from "@inertiajs/vue3";
 import eventBus from "@/event_bus.js";
+import PostHeader from "@/posts/PostHeader.vue";
 
 const loadingPosts = ref(false);
 const sendingComment = ref({});
@@ -104,12 +105,11 @@ async function send(postId, text) {
             class="w-full"
         >
             <template v-slot:subtitle>
-                <div class="flex justify-between items-center">
-                    <v-chip class="ma-2" label>
-                        {{ item.first_name }} {{ item.last_name }}
-                    </v-chip>
-                    <small>{{ item.created_at }}</small>
-                </div>
+                <PostHeader
+                    :first_name="item.first_name"
+                    :last_name="item.last_name"
+                    :created_at="item.created_at"
+                />
             </template>
             <v-card-text>
                 {{ item.post }}
@@ -133,12 +133,11 @@ async function send(postId, text) {
                     >
                         <template v-slot:text>
                             <div v-for="(comment, index) in comments[item.id].comments">
-                                <div class="flex justify-between items-center text-disabled">
-                                    <v-chip class="ma-2" label>
-                                        {{ comment.first_name }} {{ comment.last_name }}
-                                    </v-chip>
-                                    <small>{{ comment.created_at }}</small>
-                                </div>
+                                <PostHeader
+                                    :first_name="comment.first_name"
+                                    :last_name="comment.last_name"
+                                    :created_at="comment.created_at"
+                                />
                                 {{ comment.post }}
                                 <v-divider thickness="3"/>
                             </div>
