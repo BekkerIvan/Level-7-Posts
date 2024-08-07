@@ -8,6 +8,7 @@ import '@mdi/font/css/materialdesignicons.css'
 const vuetify = createVuetify({
     components,
     directives,
+    theme: { dark: false },
 });
 
 export default vuetify;
