@@ -90,6 +90,13 @@ class PostController extends Controller
             ->first();
     }
 
+    public function getSinglePost(Request $request, $id) {
+        return DB::table('posts')
+            ->where("posts.id", "=", $id)
+            ->get()
+            ->first();
+    }
+
     public function getPosts(): \Illuminate\Support\Collection {
         return DB::table('posts')
             ->join('users', 'posts.user', '=', 'users.id')
@@ -113,5 +120,21 @@ class PostController extends Controller
             ->where("posts.parent" ,"=", $post_id)
             ->select('posts.*', 'users.first_name', 'users.last_name')
             ->get();
+    }
+
+    public function deletePosts(Request $request, $id): int {
+        $TotalCommentsDeletedInt = DB::table('posts')->where("parent", "=", $id)->delete();
+        DB::table('posts')->delete($id);
+        return $TotalCommentsDeletedInt;
+    }
+
+    public function deleteComments(Request $request, $id): int {
+        return DB::table('posts')->delete($id);
+    }
+
+    public function EditPost(Request $request): int {
+        return DB::table('posts')
+            ->where('id', "=", $request->input("id"))
+            ->update(['post' => $request->input("post")]);
     }
 }

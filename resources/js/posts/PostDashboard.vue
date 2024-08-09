@@ -4,6 +4,8 @@ import { getAPIPath } from "@/assets.js";
 import { usePage } from "@inertiajs/vue3";
 import eventBus from "@/event_bus.js";
 import PostHeader from "@/posts/PostHeader.vue";
+import Comment from "@/posts/Comment.vue";
+import PostText from "@/posts/PostText.vue";
 
 const loadingPosts = ref(false);
 const sendingComment = ref({});
@@ -17,6 +19,19 @@ onMounted(async () => {
     eventBus.value.on('post-added', (newPost) => {
         resetComments(newPost.id);
         posts.value.unshift(newPost);
+    });
+
+    eventBus.value.on('refresh', async (data) => {
+        const type = Object.keys(data)[0];
+        switch (type) {
+            case "posts":
+                await fetchPosts();
+                break;
+            case "comments": {
+                await fetchComments(data[type].parent);
+                break;
+            }
+        }
     });
 });
 
@@ -109,11 +124,13 @@ async function send(postId, text) {
                     :first_name="item.first_name"
                     :last_name="item.last_name"
                     :created_at="item.created_at"
+                    :user="item.user"
+                    :id="item.id"
+                    type="posts"
                 />
             </template>
             <v-card-text>
-                {{ item.post }}
-                <v-divider thickness="3"/>
+                <PostText type="posts" :text="item.post"></PostText>
                 <v-textarea
                     v-model="commentTextareas[item.id]"
                     @click:append="sendComment(item.id)"
@@ -126,24 +143,7 @@ async function send(postId, text) {
                     class="p-2"
                     label="Comment..."
                 ></v-textarea>
-                <v-skeleton-loader v-if="comments[item.id].loading" type="paragraph"></v-skeleton-loader>
-                <v-expansion-panels v-else-if="comments[item.id].comments.length > 0">
-                    <v-expansion-panel
-                        title="Comments"
-                    >
-                        <template v-slot:text>
-                            <div v-for="(comment, index) in comments[item.id].comments">
-                                <PostHeader
-                                    :first_name="comment.first_name"
-                                    :last_name="comment.last_name"
-                                    :created_at="comment.created_at"
-                                />
-                                {{ comment.post }}
-                                <v-divider thickness="3"/>
-                            </div>
-                        </template>
-                    </v-expansion-panel>
-                </v-expansion-panels>
+                <Comment :comment="comments[item.id]"></Comment>
             </v-card-text>
         </v-card>
     </div>
